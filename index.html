@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Inggrid 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose:    #e8a0b4;
+    --rose-d:  #c96f8e;
+    --rose-l:  #fce8f0;
+    --blush:   #f9d5e5;
+    --cream:   #fff8fb;
+    --wine:    #8b3a5a;
+    --text:    #4a2035;
+    --muted:   #9b6a80;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  .page {
+    display: none;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  .petals { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .petal {
+    position: absolute;
+    width: 12px; height: 18px;
+    background: linear-gradient(135deg, #f4b8ce, #e8a0b4);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .btn-next {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    background: var(--wine);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.8rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    display: none;
+    align-items: center; gap: 0.5rem;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(139,58,90,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(139,58,90,0.4); }
+  .btn-next.show { display: flex; }
+
+  .dots {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: none; gap: 8px; z-index: 100;
+  }
+  .dots.show { display: flex; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--rose);
+    opacity: 0.4;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .dot.active { opacity: 1; transform: scale(1.3); background: var(--wine); }
+
+  #p0 { background: var(--cream); }
+
+  .envelope-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1.5rem; position: relative; z-index: 1;
+  }
+
+  .got-mail {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--rose-d);
+    animation: fadeDown 0.8s ease both;
+  }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pop      { 0%,100%{transform:scale(1)}50%{transform:scale(1.08)} }
+
+  .envelope {
+    width: clamp(240px, 50vw, 340px);
+    cursor: pointer;
+    animation: fadeDown 0.9s ease 0.2s both;
+    transition: transform 0.3s;
+  }
+  .envelope:hover { transform: scale(1.04) rotate(-1deg); }
+  .env-svg { width: 100%; }
+
+  .tap-hint {
+    font-size: 0.9rem;
+    color: var(--muted);
+    animation: fadeUp 1s ease 0.5s both;
+    letter-spacing: 0.05em;
+  }
+
+  .hearts-deco {
+    position: absolute;
+    bottom: 15%; left: 8%;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    animation: fadeUp 1.2s ease 0.7s both;
+  }
+  .hearts-deco span { font-size: 1.4rem; color: var(--rose-d); opacity: 0.6; }
+
+  #p1 { background: var(--blush); }
+
+  .msg-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    max-width: 680px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 40px rgba(200,100,140,0.12);
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rose-d);
+    margin-bottom: 0.5rem;
+  }
+
+  .msg-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: var(--wine);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .msg-body {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    line-height: 1.9;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .msg-body p + p { margin-top: 1rem; }
+
+  .sig {
+    margin-top: 1.5rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.3rem;
+    color: var(--rose-d);
+  }
+
+  .flower-corner { position: absolute; font-size: 3rem; opacity: 0.18; pointer-events: none; }
+  .fc-tl { top: -1rem; left: -1rem; transform: rotate(-20deg); }
+  .fc-br { bottom: -1rem; right: -1rem; transform: rotate(160deg); }
+
+  #p2 { background: var(--rose-l); }
+
+  .plans-wrap {
+    position: relative; z-index: 1;
+    max-width: 720px; width: 90%;
+    text-align: center;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .plans-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--wine);
+    margin-bottom: 0.4rem;
+  }
+
+  .plans-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; letter-spacing: 0.05em; }
+  .bouquet { font-size: 5rem; animation: pop 2s ease infinite; }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .plan-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.6;
+    box-shadow: 0 4px 16px rgba(200,100,140,0.1);
+  }
+  .plan-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+
+  #p3 { background: var(--cream); }
+
+  .meet-wrap {
+    position: relative; z-index: 1;
+    max-width: 680px; width: 90%;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .polaroid-frame {
+    background: #fff;
+    padding: 1rem 1rem 3rem;
+    border-radius: 4px;
+    box-shadow: 0 6px 30px rgba(180,80,120,0.15);
+    max-width: 320px;
+    margin: 0 auto 2rem;
+    transform: rotate(-2deg);
+  }
+
+  .polaroid-img {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--blush);
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    color: var(--rose-d);
+    overflow: hidden;
+  }
+  .polaroid-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .polaroid-caption {
+    text-align: center;
+    margin-top: 0.8rem;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.2rem;
+    color: var(--wine);
+  }
+
+  .meet-text {
+    background: #fff;
+    border-radius: 20px;
+    padding: 1.5rem 2rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    line-height: 1.9;
+    color: var(--text);
+    font-weight: 300;
+    box-shadow: 0 4px 20px rgba(200,100,140,0.1);
+    text-align: center;
+  }
+
+  #p4 { background: var(--wine); }
+
+  .song-wrap {
+    position: relative; z-index: 1;
+    max-width: 600px; width: 90%;
+    text-align: center;
+    animation: fadeUp 0.8s ease both;
+    color: #fff;
+  }
+
+  .song-title-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 0.5rem;
+  }
+
+  .song-heading {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: #fff;
+    margin-bottom: 2rem;
+  }
+
+  .vinyl { font-size: 6rem; animation: spin 4s linear infinite; display: block; margin: 0 auto 1.5rem; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .song-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; color: var(--blush); margin-bottom: 0.3rem; }
+  .song-artist { color: var(--rose); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+  .song-note {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.8);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .song-placeholder {
+    background: rgba(255,255,255,0.1);
+    border: 1px dashed rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 1.2rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1.5rem;
+  }
+
+  #p5 { background: var(--cream); }
+
+  .letter-wrap {
+    position: relative; z-index: 1;
+    max-width: 660px; width: 90%;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .letter-paper {
+    background: #fff;
+    border-radius: 4px;
+    padding: clamp(2rem, 5vw, 3rem);
+    box-shadow: 0 8px 40px rgba(180,80,120,0.12), 4px 4px 0 rgba(232,160,180,0.2);
+    position: relative;
+  }
+
+  .letter-paper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--rose-d), var(--rose), var(--rose-d));
+    border-radius: 4px 4px 0 0;
+  }
+
+  .letter-greeting {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--wine);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .letter-body { font-size: clamp(0.9rem, 2.5vw, 1.05rem); line-height: 2; color: var(--text); font-weight: 300; }
+  .letter-body p + p { margin-top: 1.2rem; }
+
+  .letter-sign { margin-top: 2rem; text-align: right; }
+  .letter-sign span { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: var(--rose-d); }
+
+  .rose-deco { text-align: center; font-size: 2rem; margin: 1rem 0 0.5rem; opacity: 0.5; }
+
+  .end-msg {
+    margin-top: 3rem;
+    text-align: center;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5rem;
+    color: var(--rose-d);
+    animation: pop 2s ease infinite;
+  }
+
+  @media (max-width: 500px) {
+    .plans-grid { grid-template-columns: 1fr 1fr; }
+    .btn-next { bottom: 1rem; right: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petals" id="petals"></div>
+
+<div class="dots" id="dots">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+<button class="btn-next" id="btnNext">Next ›</button>
+
+<!-- PAGE 0 — ENVELOPE -->
+<div class="page active" id="p0">
+  <div class="envelope-wrap">
+    <div class="got-mail">You've got a letter! 🌸</div>
+    <div class="envelope" id="envelope" onclick="openEnvelope()">
+      <svg class="env-svg" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="50" width="320" height="160" rx="8" fill="#f4b8ce"/>
+        <polygon points="10,50 170,140 330,50" fill="#e8a0b4"/>
+        <polygon points="10,50 10,210 120,130" fill="#d4889e"/>
+        <polygon points="330,50 330,210 220,130" fill="#d4889e"/>
+        <polygon points="10,210 330,210 220,130 120,130" fill="#f9d5e5"/>
+        <circle cx="170" cy="145" r="22" fill="#c96f8e"/>
+        <circle cx="170" cy="145" r="18" fill="#e8a0b4"/>
+        <text x="170" y="151" text-anchor="middle" font-size="16" fill="#fff" font-family="Georgia">✿</text>
+      </svg>
+    </div>
+    <p class="tap-hint">klik amplop untuk membuka 💌</p>
+    <div class="hearts-deco">
+      <span>♡</span><span>♡</span><span>♡</span>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1 — PESAN BUAT DIA -->
+<div class="page" id="p1">
+  <div class="msg-card">
+    <span class="flower-corner fc-tl">🌸</span>
+    <span class="flower-corner fc-br">🌸</span>
+    <p class="section-label">a little message</p>
+    <h1 class="msg-title">Untuk Inggrid, sayangku 🌷</h1>
+    <div class="msg-body">
+      <p>heii kamuuu yaaa kamuu yangg lagii baca inii akuu cumaa mauu kamuu tauu kalauu kamuu ituu berhargaa bangett buattt akuuu setiapp harinyaa semenjakk ada kamuu harrii harrii akuu kerasaaa lebihh berwarnaaa lebihh seruu dan lebihh bahagiiaa jujurr ajaaa kehadirann kamuu jadii salahh satuu hall terbaikyy yangg pernahh datengg di hidup akuuu akuu bersyukurr bangett bisaa kenall kamuu dan punyaa kamuu di hidup akuuu
+
+kamuu ituu bukann cumaa seseorang yangg akuu sayangg tapiii jugaa jadii tempatt akuu ceritaa tempatt akuu pulangg pas harrii lagii capekk dan jadii alasann akuu senyumm sendirii tanpaaa sadarrr kadangg akuu mikirrr gimanaa yaaa harrii harrii akuu kalaauu gaa ada kamuu mungkinn gaaa seindahh inii
+
+makasiiihhh yaaa sayangg karenaa udahh selaluu ada buattt akuuu makasiiihhh karenaa udahh jadii dirii kamuuu dan makasiiihhh karenaa udahh ngasii banyakk kebahagiaann di hidup akuuu akuu sayanggg bangett samaa kamuuu
+</p>
+    </div>
+    <p class="sig">— Daffa ✨</p>
+  </div>
+</div>
+
+<!-- PAGE 2 — BUNGA & RENCANA -->
+<div class="page" id="p2">
+  <div class="plans-wrap">
+    <p class="section-label">our future</p>
+    <h1 class="plans-title">Rencana Kita ke Depan 🌷</h1>
+    <p class="plans-sub">hal-hal yang ingin aku lakukan bersamamu</p>
+    <div class="bouquet">💐</div>
+    <div class="plans-grid">
+     <div class="plan-item"><div class="plan-icon">🏍️</div>Touring bareng kamu dan temen-temen kamu, keliling dan bikin kenangan seru bareng</div>
+<div class="plan-item"><div class="plan-icon">🎡</div>Pergi ke taman hiburan dan ketawa sepanjang hari</div>
+<div class="plan-item"><div class="plan-icon">🍜</div>Coba semua makanan enak yang pengen kita makan bareng</div>
+<div class="plan-item"><div class="plan-icon">🌊</div>Liburan ke pantai, jalan-jalan sambil pegangan tangan</div>
+<div class="plan-item"><div class="plan-icon">💌</div>Terus saling pilih satu sama lain, setiap hari</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 — PERTAMA KALI BERTEMU -->
+<div class="page" id="p3">
+  <div class="meet-wrap">
+    <p class="section-label" style="text-align:center;color:var(--rose-d);letter-spacing:0.18em;font-size:0.75rem;text-transform:uppercase;margin-bottom:0.3rem;">our story</p>
+    <h1 class="plans-title" style="font-family:'Dancing Script',cursive;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--wine);text-align:center;margin-bottom:1.5rem;">Pertama Kali Kita Bertemu 🥹</h1>
+    <div class="polaroid-frame">
+      <div class="polaroid-img" id="meetPhoto">
+        <img src="foto-pertama.jpeg" alt="pertama kali bertemu">
+      </div>
+      <p class="polaroid-caption">awal segalanya ✨</p>
+    </div>
+    <div class="meet-text">
+      <p>jujurr ajaaa sejak pertamaa kalii akuu liatt kamuuu ada sesuatuu yangg bikin akuu tertarikk samaa kamuuu mungkinng kedengerann sederhan aa tapiii akuu sukaa samaa mataa kamuuu akuu sukaa cara kamuu keliatann dan entahh kenapaa ada rasa pengenn kenall kamuu lebihh jauhh darii situu akuu mulaii penasaranng samaa kamuu dan makin lamaa makin pengenn dekettt samaa kamuuu makanyaa akuu nyobaa memberanikan dirii buattt ngejarr kamuuu walaupunn awalnyaa akuu gugupp dan takutt karenaa akuu ngerasaa kamuu spesialll bangett buattt akuuu dan sekarangg akuu bersyukurr bangett karenaa keputusann buattt memberanikan dirii dekettt samaa kamuu jadii salahh satuu keputusann terbaikyy yangg pernahh akuu ambill karenaa akhirnyaa akuu bisaa kenall kamuu lebihh dekett bisaa dengerinn ceritaa kamuu bisaa bahagiiaa samaa kamuu dan bisaa punyaa banyakk momen indahh samaa kamuuu
+</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4 — LAGU -->
+<div class="page" id="p4">
+  <div class="song-wrap">
+    <p class="song-title-label">a song for you</p>
+    <h1 class="song-heading">Lagu yang Mengingatkanku Padamu 🎵</h1>
+
+    <div style="background:rgba(255,255,255,0.12); border-radius:20px; padding:2rem 1.5rem; margin-bottom:1.5rem;">
+      
+      <!-- Vinyl animasi -->
+      <div style="font-size:5rem; animation:spin 4s linear infinite; display:inline-block; margin-bottom:1rem;">🎵</div>
+
+      <p class="song-name" style="font-size:1.8rem; margin-bottom:0.3rem;">Cinta Sejati</p>
+      <p class="song-artist" style="margin-bottom:1.5rem;">Bunga Citra Lestari</p>
+
+      <!-- Tombol buka Spotify -->
+      <a href="https://open.spotify.com/search/Cinta%20Sejati%20Bunga%20Citra%20Lestari" 
+         target="_blank"
+         style="display:inline-flex; align-items:center; gap:0.5rem; background:#1DB954; color:#fff; padding:0.7rem 1.6rem; border-radius:50px; font-size:0.95rem; text-decoration:none; font-weight:600; margin:0.3rem;">
+        🎧 Buka di Spotify
+      </a>
+
+      <br>
+
+      <!-- Tombol buka YouTube -->
+      <a href="https://www.youtube.com/results?search_query=Cinta+Sejati+Bunga+Citra+Lestari" 
+         target="_blank"
+         style="display:inline-flex; align-items:center; gap:0.5rem; background:#FF0000; color:#fff; padding:0.7rem 1.6rem; border-radius:50px; font-size:0.95rem; text-decoration:none; font-weight:600; margin:0.3rem;">
+        ▶ Buka di YouTube
+      </a>
+
+    </div>
+
+    <p class="song-note">
+      "setiapp dengerr laguu inii kamuu ingett gasii pertama kali kita blend lagu di spotify buat aku  kek berbungaaa bungaa  makasihh yaa sayanggg🌸"
+    </p>
+  </div>
+</div>
+
+<!-- PAGE 5 — SURAT PERMINTAAN MAAF -->
+<div class="page" id="p5">
+  <div class="letter-wrap">
+    <div class="letter-paper">
+      <h1 class="letter-greeting">Surat Permintaan Maaf 🌹</h1>
+      <div class="letter-body">
+        <p>Inggrid sayang,</p>
+        <p>inggridd sayangg akuu mauu minta maaff yaaa kalauu akhir akhir inii akuu malahh bikin harii harrii kamuu jadii capekk bosenn dan gaa selaluu menyenangkanng akuu tauu mungkinng ada banyakk waktuu dimana kamuu harus nungguu akuu harus sabarr ngadepinn akuu dan bahkan harus nahan perasaann kamuu sendirii jujurr akuu ngerasaa bersalahh kalauu tanpaa sadarrr akuu malahh jadii alasann kamuu sedihh atauu kepikirann terusss</p>
+        <p>akuu juga mauu minta maaff kalauu akuu seringg bikin kamuu nangiss padahall yangg akuu pengenn sebenerrnyaa cumaa liatt kamuu senyumm dan bahagiiaa akuu tauu mungkinng akuu belumm jadii orangg yangg sempurnaa buattt kamuu dan masii banyakk kuranggnyaa tapiii percayaa yaaa sayangg akuu lagii belajarr dan berusahaa jadii lebihh baikk setiapp harinyaa </p>
+        <p>jadiii tolongg sabarr yaaa sayangg inii juga prosesss buattt akuu dan buattt kittaa akuu gaa mauu berhentii berusahaa karenaa kamuu terlaluu berhargaa buattt akuu dan akuu pengenn terusss buktiin kalauu akuu seriusss samaa kamuu makasii yaaa karenaa sampeee harrii inii kamuu masii bertahann masii percayaa dan masii maau ada buattt akuu akuu sayangg bangett samaa kamuu dan akuu janjii bakall terusss usahaa supayaaa akuu bisaa jadii alasan kamuu bahagiiaa lebihh seringg daripadaa alasan kamuu sedihh 🌸</p>
+      </div>
+      <div class="letter-sign">
+        <span>Dengan cinta,<br>Daffa 💕</span>
+      </div>
+    </div>
+    <div class="rose-deco">🌹 🌸 🌹</div>
+    <div class="end-msg">I love you, Inggrid 💗</div>
+  </div>
+</div>
+
+<script>
+  const pages = ['p0','p1','p2','p3','p4','p5'];
+  let current = 0;
+
+  const petalsEl = document.getElementById('petals');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (4 + Math.random() * 6) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+    p.style.width = (8 + Math.random() * 10) + 'px';
+    p.style.height = (12 + Math.random() * 14) + 'px';
+    petalsEl.appendChild(p);
+  }
+
+  function showPage(idx) {
+    pages.forEach(id => document.getElementById(id).classList.remove('active'));
+    document.getElementById(pages[idx]).classList.add('active');
+
+    const btn = document.getElementById('btnNext');
+    const dots = document.getElementById('dots');
+    const dotEls = dots.querySelectorAll('.dot');
+
+    if (idx === 0) {
+      btn.classList.remove('show');
+      dots.classList.remove('show');
+    } else {
+      btn.classList.add('show');
+      dots.classList.add('show');
+      btn.textContent = idx === 5 ? '🌸 Selesai' : 'Next ›';
+      dotEls.forEach((d, i) => d.classList.toggle('active', i === idx - 1));
+    }
+  }
+
+  function openEnvelope() {
+    const env = document.getElementById('envelope');
+    env.style.transform = 'scale(1.1)';
+    setTimeout(() => { env.style.transform = 'scale(0)'; }, 200);
+    setTimeout(() => { current = 1; showPage(1); }, 500);
+  }
+
+  document.getElementById('btnNext').addEventListener('click', () => {
+    if (current < 5) { current++; showPage(current); }
+  });
+</script>
+</body>
+</html>
